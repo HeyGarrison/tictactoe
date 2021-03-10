@@ -1,9 +1,18 @@
-import { GameStore, updateCoordinates } from '../GameStore'
+import { useEffect } from 'react';
+import { GameStore, updateCoordinates, declareWinner } from '../GameStore'
 
 
 
 const Board = () => {
   const coordinates = GameStore.useState(s => s.coordinates);
+
+  useEffect(() => {
+    const unsub = GameStore.subscribe(s => s.coordinates, declareWinner)
+
+    return () => {
+      unsub()
+    }
+  }, [])
 
   return (
     <div className="grid grid-cols-3 border">
