@@ -23,7 +23,7 @@ function App() {
 
       for (let i = 0; i < possibleWin.length; i++) {
         const [a, b, c] = possibleWin[i];
-        if (coordinates[a] && coordinates[a] === coordinates[b] && coordinates[a] === coordinates[c]) {
+        if (coordinates[a] === coordinates[b] && coordinates[a] === coordinates[c]) {
           GameStore.update(s => {
             s.winner = coordinates[a]
           })
