@@ -1,24 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { useEffect } from "react";
+import Board from "./components/Board";
+import Header from './components/Header';
+import { GameStore } from "./GameStore";
+
+const possibleWin = [
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  [0, 4, 8],
+  [2, 4, 6]
+];
+
 
 function App() {
+
+  useEffect(() => {
+    const unsub = GameStore.subscribe(s => s.coordinates, (coordinates, allState) => {
+      if (allState.winner) return;
+
+      for (let i = 0; i < possibleWin.length; i++) {
+        const [a, b, c] = possibleWin[i];
+        if (coordinates[a] && coordinates[a] === coordinates[b] && coordinates[a] === coordinates[c]) {
+          GameStore.update(s => {
+            s.winner = coordinates[a]
+          })
+        }
+      }
+    })
+
+    return () => {
+      unsub()
+    }
+  }, [])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div
+      className="m-auto w-full max-w-xl pt-6"
+    >
+      <Header />
+      <Board />
     </div>
   );
 }
